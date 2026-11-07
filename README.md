@@ -3,38 +3,31 @@
 INFO 557 final project: predict **chronic pain** (`binary_label`) from synthetic
 [Synthea](https://synthea.mitre.org/) patient records.
 
+- **[Project explorer](https://ai-sandbox-ai-healthcare.github.io/neural-network-final-project/):** the tasks,
+  the benchmarks, and where you upload your best model. **It counts toward your grade:** it records how long
+  you use it, what you do there, and whether your model beats the baseline and the GPU models and reaches the
+  final goal.
 - **Instructions:** [`my-model-instructions.ipynb`](my-model-instructions.ipynb)
 - **Complete example:** [`example-for-guide/`](example-for-guide/)
-- **Tasks and benchmarks:** [project explorer](https://ai-sandbox-ai-healthcare.github.io/neural-network-final-project/).
-  Put your task results in your report only, but commit all their output files in `analysis/`.
-- **`my_model.csv`:** download the template from the explorer (Deliverables tab), fill it in with your best
-  model's results for the 5 iterations, and upload it back to the explorer to complete the comparison.
-- **The explorer counts toward your grade:** it records how long you use it, what you do there, and whether
-  your model beats the baseline and the GPU models and reaches the final goal.
-- **Data:** CSV files in the shared folder `/home/shared/` on Cacao JupyterHub (do not copy them into the
-  project). This example loads `patients.csv`; change the file name to load another CSV file:
-
-  ```python
-  df = pd.read_csv("/home/shared/patients.csv")
-  ```
 
 ## Steps
 
-1. Log in to Cacao JupyterHub with your GitHub account.
-2. Create a GitHub access token (see the project instructions document).
-3. Clone this repo in JupyterHub.
-4. Create and activate a Python environment in your JupyterHub space:
+1. **Explore:** open the project explorer and read the Deliverables tab: the main task, Tasks 1 to 5, and the
+   benchmarks.
+2. **Set up:** log in to Cacao JupyterHub with your GitHub account, clone this repo, and install the requirements:
    ```bash
    python -m venv .venv
    source .venv/bin/activate
+   pip install -r requirements.txt
    ```
-5. In the environment: `pip install -r requirements.txt`
-6. Run the example: `python example-for-guide/run-example.py`
-7. Explore the `.py` files in `helper-src/`.
-8. Read the instructions: `my-model-instructions.ipynb`.
-9. Complete `my-model.py`.
-10. Create a `.py` file for each of your other models (`task-1.py` ... `task-5.py`).
-11. Commit and push your code and output files after each part: the best model and each task (see below).
+3. **Learn the code:** run `python example-for-guide/run-example.py`, look through `helper-src/`, and read
+   `my-model-instructions.ipynb`.
+4. **Best model:** complete `my-model.py` and run iterations 1 to 5. Commit and push.
+5. **Back to the explorer:** download the `my_model.csv` template (Deliverables tab), fill it in with your best
+   model's 5 iterations, and upload it. Goal: beat the baseline and the GPU models and reach the final goal.
+6. **Tasks 1 to 5:** copy `my-model.py` to `task-1.py` ... `task-5.py` and change what each task asks.
+   Commit and push each task as you finish it. Task results go in your report only, not the explorer.
+7. **Report:** submit it to D2L.
 
 ## Folders
 
@@ -73,16 +66,15 @@ resource sheet with your JupyterHub username.
 
 ## Push to GitHub
 
-**Commit and push after each part:** at least one commit for your best model and one for each task.
-One commit at the end of the project costs a letter grade.
+**Push as you go:** complete each part (best model, Task 1 ... Task 5) and push it separately. Several commits
+per task are encouraged. **Pushing everything in one change at the end costs a letter grade.**
 
 ```bash
 git add *.py analysis/
-git commit -m "Task 1"   # one commit per part: best model, Task 1, ..., Task 5
+git commit -m "Task 1: training sizes"   # one or more commits per task
 git push
 ```
 
 - **Push:** your `.py` files (including any you created) and the output files in `analysis/`, including
   `analysis/overall-resource-usage-summary.csv`. Missing files will affect your score.
-- **Do not push:** data, model weights, or changes to `helper-src/` and
-  `example-for-guide/`.
+- **Do not push:** data, model weights, or changes to `helper-src/` and `example-for-guide/`.
