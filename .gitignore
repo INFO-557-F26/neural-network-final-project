@@ -1,0 +1,30 @@
+ai-sandbox/
+neural-network-final-project-ui/
+neural-network-assignment-1/
+neural-network-assignment-2/
+neural-network-assignment-3/
+
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+myenv/
+.DS_Store
+
+# Data stays in shared memory; never commit local copies
+/data/
+/*.csv
+
+# Explorer upload: not part of the GitHub submission
+my_model.csv
+
+# Model weights and checkpoints
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.joblib
+*.h5
+*.safetensors

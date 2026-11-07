@@ -1,0 +1,2 @@
+tag,elapsed_hr,gpu_hrs,cpu_pct,disk_used_gb
+logistic-regression-iter1,0.000001,0.000000,0.0,314.8

@@ -1,0 +1,67 @@
+Run started 2026-11-04 01:03:31; output saved to example-for-guide/logs/logistic-regression-iter1.out
+Model: logistic-regression | iteration: 1 | seed: 43
+Hyperparameters: learning_rate=0.1, steps=500, threshold=0.5
+Split fractions: {'train': 0.7, 'val': 0.15, 'test': 0.15}
+
+[1] Loaded example-for-guide/data/patient-features.csv: 320 patients, 19 features, 40.0% positive
+
+[2] Stratified split
+train: 224 rows (70.0%)
+  val: 48 rows (15.0%)
+ test: 48 rows (15.0%)
+All split checks passed: partitions are disjoint, cover every row once, and keep the class balance.
+           rows  pct_of_all_rows  class_0_rows  class_0_pct  class_1_rows  class_1_pct
+partition                                                                             
+train       224             70.0           134         59.8            90         40.2
+val          48             15.0            29         60.4            19         39.6
+test         48             15.0            29         60.4            19         39.6
+all         320            100.0           192         60.0           128         40.0
+
+[3] Training (timed by ResourceLogger)
+  step  100: train loss 0.4145, validation loss 0.4187
+  step  200: train loss 0.4014, validation loss 0.4114
+  step  300: train loss 0.3988, validation loss 0.4118
+  step  400: train loss 0.3980, validation loss 0.4128
+  step  500: train loss 0.3977, validation loss 0.4136
+[ResourceLogger] logistic-regression-iter1 (completed): 0.0 s, gpu_hrs=0.000000, cpu_pct=0.0, disk_used_gb=314.8 -> example-for-guide/logs/resource-usage.csv
+[ResourceLogger] run 1: project total 0.000 h of the 4 h budget (full credit) -> analysis/overall-resource-usage-summary.csv
+
+Learned parameters (features were standardized, so weights are comparable):
+                 feature  weight
+                    qaly -0.9774
+           pain_severity  0.9344
+                    daly  0.8417
+                    qols -0.5985
+   number_of_unique_meds  0.5917
+     healthcare_expenses  0.4041
+    number_of_encounters  0.3924
+        respiratory_rate  0.3275
+diastolic_blood_pressure  0.2801
+                     age  0.2696
+     healthcare_coverage -0.2246
+ systolic_blood_pressure  0.2007
+             body_height  0.1607
+             body_weight  0.1525
+       unique_procedures  0.1384
+         body_mass_index -0.0925
+    number_of_procedures  0.0324
+              heart_rate  0.0158
+               is_female  0.0029
+bias: -0.4649
+
+[4] Validation metrics
+  Accuracy     0.7500
+  MacroAUC     0.8730
+  Precision_1  0.7333
+  Recall_1     0.5789
+  F1_1         0.6471
+
+[5] Test evaluation and output files
+Saved metrics to example-for-guide/results/metrics/logistic-regression-metrics-iter1.csv
+Saved confusion matrix to example-for-guide/results/figures/logistic-regression-confusion-matrix-iter1.png
+Saved ROC curve to example-for-guide/results/figures/logistic-regression-roc-curve-iter1.png
+
+Test metrics for logistic-regression-iter1:
+ iteration  seed Accuracy MacroAUC Precision_1 Recall_1   F1_1 elapsed_hr  gpu_hrs cpu_pct
+         1    43   0.7917   0.8385      0.7647   0.6842 0.7222   0.000001 0.000000     0.0
+Run finished 2026-11-04 01:03:32

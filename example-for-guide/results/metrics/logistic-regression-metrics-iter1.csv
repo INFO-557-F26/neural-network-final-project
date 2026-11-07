@@ -1,0 +1,2 @@
+iteration,seed,Accuracy,MacroAUC,Precision_1,Recall_1,F1_1,elapsed_hr,gpu_hrs,cpu_pct
+1,43,0.7917,0.8385,0.7647,0.6842,0.7222,0.000001,0.000000,0.0
