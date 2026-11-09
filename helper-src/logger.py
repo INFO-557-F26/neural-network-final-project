@@ -16,7 +16,8 @@ Every run writes to two files:
     project (completed, failed or interrupted) with its start time, end time and time
     needed, the running total, and the budget status. Every run counts toward the budget.
 The same summary row is also sent to the course resource sheet, with the JupyterHub username
-('local' when the run is not on JupyterHub). Sending is silent and never stops a run.
+(off JupyterHub: 'local_<GitHub username>' from the clone's git settings, or 'local' if none is
+found). Sending is silent and never stops a run.
 After the block, `usage` holds the measured numbers, so they can go into your metrics file.
 
 resource-usage.csv columns: tag, elapsed_hr, gpu_hrs, cpu_pct, disk_used_gb. torch is optional
@@ -26,7 +27,9 @@ resource-usage.csv columns: tag, elapsed_hr, gpu_hrs, cpu_pct, disk_used_gb. tor
 import csv
 import json
 import os
+import re
 import shutil
+import subprocess
 import time
 import urllib.request
 from contextlib import contextmanager
@@ -51,7 +54,9 @@ SUMMARY_HEADER = [
     "jupyterhub_username", "run", "analysis_folder", "tag", "status", "start_time", "end_time",
     "time_needed", "time_needed_hr", "gpu_hrs", "cpu_pct", "total_time_hr", "budget_status",
 ]
-LOCAL_USERNAME = "local"  # jupyterhub_username when the run is not on JupyterHub
+LOCAL_USERNAME = "local"  # jupyterhub_username off JupyterHub: 'local_<GitHub username>', or 'local'
+COURSE_ORG = "INFO-557-F26"  # GitHub org that owns the course repos
+CLASSROOM_PREFIX = "neural-network-final-project-"  # GitHub Classroom repo name: <prefix><GitHub username>
 
 # Course resource sheet (instructor-owned; the web app appends rows, students can only view)
 SHEET_URL = "https://script.google.com/macros/s/AKfycbwhaTz1rsBPlX_QGuU7VBYFvA7BJsVSTYtwzQCywbUJjNudj6MpURVkL0Tc1VehRg82Rw/exec"
@@ -105,9 +110,40 @@ def display_path(path: Path) -> str:
         return path.as_posix()
 
 
+def _git(*args) -> str:
+    """Output of a git command run in the repo, or '' if git is missing or the command fails."""
+    try:
+        result = subprocess.run(["git", "-C", str(REPO_ROOT), *args], capture_output=True, text=True, timeout=5)
+        return result.stdout.strip() if result.returncode == 0 else ""
+    except Exception:
+        return ""
+
+
+def github_username() -> str:
+    """GitHub username of this clone, or '' if not found.
+
+    From the origin URL (fork or template copy: github.com/<username>/...; GitHub Classroom:
+    github.com/<COURSE_ORG>/<CLASSROOM_PREFIX><username>), else from a GitHub no-reply commit
+    email (<id>+<username>@users.noreply.github.com). Only the username is kept, never the URL.
+    """
+    match = re.search(r"github\.com[:/]+([^/]+)/([^/]+?)(?:\.git)?/?$", _git("config", "--get", "remote.origin.url"))
+    if match:
+        owner, repo = match.groups()
+        if owner.lower() != COURSE_ORG.lower():
+            return owner
+        if repo.lower().startswith(CLASSROOM_PREFIX) and len(repo) > len(CLASSROOM_PREFIX):
+            return repo[len(CLASSROOM_PREFIX):]
+    match = re.fullmatch(r"(?:\d+\+)?([A-Za-z0-9-]+)@users\.noreply\.github\.com", _git("config", "user.email"))
+    return match.group(1) if match else ""
+
+
 def jupyterhub_username() -> str:
-    """JupyterHub user name of this run (set by JupyterHub), or 'local' when not on JupyterHub."""
-    return os.environ.get("JUPYTERHUB_USER", "").strip() or LOCAL_USERNAME
+    """JupyterHub username of this run; off JupyterHub, 'local_<GitHub username>', or 'local' if none is found."""
+    hub_user = os.environ.get("JUPYTERHUB_USER", "").strip()
+    if hub_user:
+        return hub_user
+    github = github_username()
+    return f"{LOCAL_USERNAME}_{github}" if github else LOCAL_USERNAME
 
 
 def _send_to_sheet(row: dict) -> bool:
